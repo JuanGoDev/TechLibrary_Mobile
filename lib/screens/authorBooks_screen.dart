@@ -5,22 +5,22 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:tech_library_mobile/components/loader_component.dart';
 import 'package:tech_library_mobile/helpers/api_helper.dart';
-import 'package:tech_library_mobile/models/author.dart';
+import 'package:tech_library_mobile/models/authorBook.dart';
 import 'package:tech_library_mobile/models/response.dart';
 import 'package:tech_library_mobile/models/token.dart';
-import 'package:tech_library_mobile/screens/author_screen.dart';
+import 'package:tech_library_mobile/screens/authorBook_screen.dart';
 
-class AuthorsScreen extends StatefulWidget {
+class AuthorBooksScreen extends StatefulWidget {
   final Token token;
 
-  AuthorsScreen({required this.token});
+  AuthorBooksScreen({required this.token});
 
   @override
-  _AuthorsScreenState createState() => _AuthorsScreenState();
+  _AuthorBooksScreenState createState() => _AuthorBooksScreenState();
 }
 
-class _AuthorsScreenState extends State<AuthorsScreen> {
-  List<Author> _authors = [];
+class _AuthorBooksScreenState extends State<AuthorBooksScreen> {
+  List<AuthorBook> _authorBooks = [];
   bool _showLoader = false;
   bool _isFiltered = false;
   String _search = '';
@@ -28,14 +28,14 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
   @override
   void initState() {
     super.initState();
-    _getAuthors();
+    _getAuthorBooks();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Autores'),
+        title: Text('Autores-Libros'),
         actions: <Widget>[
           _isFiltered
               ? IconButton(
@@ -55,7 +55,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
     );
   }
 
-  Future<Null> _getAuthors() async {
+  Future<Null> _getAuthorBooks() async {
     setState(() {
       _showLoader = true;
     });
@@ -75,7 +75,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
       return;
     }
 
-    Response response = await ApiHelper.getAuthors(widget.token);
+    Response response = await ApiHelper.getAuthorBooks(widget.token);
 
     setState(() {
       _showLoader = false;
@@ -93,12 +93,12 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
     }
 
     setState(() {
-      _authors = response.result;
+      _authorBooks = response.result;
     });
   }
 
   Widget _getContent() {
-    return _authors.length == 0 ? _noContent() : _getListView();
+    return _authorBooks.length == 0 ? _noContent() : _getListView();
   }
 
   Widget _noContent() {
@@ -107,8 +107,8 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
         margin: EdgeInsets.all(20),
         child: Text(
           _isFiltered
-              ? 'No hay autores con ese criterio de búsqueda.'
-              : 'No hay autores registrados.',
+              ? 'No hay autores asociados a libros con ese criterio de búsqueda.'
+              : 'No hay autores asociados a libros registrados.',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
@@ -117,9 +117,9 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
 
   Widget _getListView() {
     return RefreshIndicator(
-      onRefresh: _getAuthors,
+      onRefresh: _getAuthorBooks,
       child: ListView(
-        children: _authors.map((e) {
+        children: _authorBooks.map((e) {
           return Card(
             child: InkWell(
               onTap: () => _goEdit(e),
@@ -132,7 +132,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${e.nombre} ${e.apellido}',
+                          e.fechaPublicacion,
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -158,11 +158,11 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            title: Text('Filtrar Autores'),
+            title: Text('Filtrar Autores-Libros'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text('Escriba las primeras letras del autor'),
+                Text('Escriba la fecha de publicación del libro'),
                 SizedBox(
                   height: 10,
                 ),
@@ -191,7 +191,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
     setState(() {
       _isFiltered = false;
     });
-    _getAuthors();
+    _getAuthorBooks();
   }
 
   void _filter() {
@@ -199,15 +199,17 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
       return;
     }
 
-    List<Author> filteredList = [];
-    for (var autor in _authors) {
-      if (autor.nombre.toLowerCase().contains(_search.toLowerCase())) {
-        filteredList.add(autor);
+    List<AuthorBook> filteredList = [];
+    for (var authorBook in _authorBooks) {
+      if (authorBook.fechaPublicacion
+          .toLowerCase()
+          .contains(_search.toLowerCase())) {
+        filteredList.add(authorBook);
       }
     }
 
     setState(() {
-      _authors = filteredList;
+      _authorBooks = filteredList;
       _isFiltered = true;
     });
 
@@ -218,33 +220,26 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
     String? result = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => AuthorScreen(
+            builder: (context) => AuthorBookScreen(
                   token: widget.token,
-                  author: Author(
-                      id: 0,
-                      documento: 0,
-                      nombre: '',
-                      apellido: '',
-                      sexo: '',
-                      fechaNacimiento: '',
-                      paisOrigen: '',
-                      fotoAutor: ''),
+                  authorBook: AuthorBook(
+                      id: 0, idLibro: 0, idAutor: 0, fechaPublicacion: ''),
                 )));
     if (result == 'yes') {
-      _getAuthors();
+      _getAuthorBooks();
     }
   }
 
-  void _goEdit(Author author) async {
+  void _goEdit(AuthorBook authorBook) async {
     String? result = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => AuthorScreen(
+            builder: (context) => AuthorBookScreen(
                   token: widget.token,
-                  author: author,
+                  authorBook: authorBook,
                 )));
     if (result == 'yes') {
-      _getAuthors();
+      _getAuthorBooks();
     }
   }
 }

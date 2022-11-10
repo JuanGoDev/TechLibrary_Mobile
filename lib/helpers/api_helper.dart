@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:tech_library_mobile/helpers/constans.dart';
 import 'package:tech_library_mobile/models/author.dart';
+import 'package:tech_library_mobile/models/authorBook.dart';
 import 'package:tech_library_mobile/models/response.dart';
 import 'package:tech_library_mobile/models/token.dart';
 import 'package:http/http.dart' as http;
@@ -119,6 +120,40 @@ class ApiHelper {
     if (decodedJson != null) {
       for (var item in decodedJson) {
         list.add(Author.fromJson(item));
+      }
+    }
+
+    return Response(isSuccess: true, result: list);
+  }
+
+  static Future<Response> getAuthorBooks(Token token) async {
+    if (!_validToken(token)) {
+      return Response(
+          isSuccess: false,
+          message:
+              'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
+    }
+
+    var url = Uri.parse('${Constans.apiUrl}/api/autoresLibros');
+    var response = await http.get(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+        'authorization': 'bearer ${token.token}',
+      },
+    );
+
+    var body = response.body;
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    List<AuthorBook> list = [];
+    var decodedJson = jsonDecode(body);
+    if (decodedJson != null) {
+      for (var item in decodedJson) {
+        list.add(AuthorBook.fromJson(item));
       }
     }
 

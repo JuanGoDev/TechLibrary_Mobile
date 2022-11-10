@@ -1,106 +1,78 @@
-// ignore_for_file: unused_field, prefer_final_fields, prefer_const_constructors, sort_child_properties_last
+// ignore_for_file: unused_field, prefer_final_fields, prefer_const_constructors, sort_child_properties_last, use_key_in_widget_constructors, prefer_const_constructors_in_immutables, library_private_types_in_public_api, unused_element, use_build_context_synchronously
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:tech_library_mobile/components/loader_component.dart';
 import 'package:tech_library_mobile/helpers/api_helper.dart';
-import 'package:tech_library_mobile/models/author.dart';
+import 'package:tech_library_mobile/models/authorBook.dart';
 import 'package:tech_library_mobile/models/response.dart';
 import 'package:tech_library_mobile/models/token.dart';
 
-class AuthorScreen extends StatefulWidget {
+class AuthorBookScreen extends StatefulWidget {
   final Token token;
-  final Author author;
+  final AuthorBook authorBook;
 
-  AuthorScreen({required this.token, required this.author});
+  AuthorBookScreen({required this.token, required this.authorBook});
 
   @override
-  _AuthorScreenState createState() => _AuthorScreenState();
+  _AuthorBookScreenState createState() => _AuthorBookScreenState();
 }
 
-class _AuthorScreenState extends State<AuthorScreen> {
+class _AuthorBookScreenState extends State<AuthorBookScreen> {
   bool _showLoader = false;
 
-  int _id = 0;
-  int _documento = 0;
-  String _nombre = '';
-  String _apellido = '';
-  String _sexo = '';
-  String _fechaNacimiento = '';
-  String _paisOrigen = '';
-  String _fotoAutor = '';
+  int _idAutorLibro = 0;
+  int _idLibro = 0;
+  int _idAutor = 0;
+  String _fechaPublicacion = '';
 
-  String _idError = '';
-  String _documentoError = '';
-  String _nombreError = '';
-  String _apellidoError = '';
-  String _sexoError = '';
-  String _fechaNacimientoError = '';
-  String _paisOrigenError = '';
-  String _fotoAutorError = '';
+  String _idAutorLibroError = '';
+  String _idLibroError = '';
+  String _idAutorError = '';
+  String _fechaPublicacionError = '';
 
-  bool _nombreShowError = false;
-  bool _idShowError = false;
-  bool _documentoShowError = false;
-  bool _apellidoShowError = false;
-  bool _sexoShowError = false;
-  bool _fechaNacimientoShowError = false;
-  bool _paisOrigenShowError = false;
-  bool _fotoAutorShowError = false;
-  bool _nombreErrorShowError = false;
+  bool _idAutorLibroShowError = false;
+  bool _idLibroShowError = false;
+  bool _idAutorShowError = false;
+  bool _fechaPublicacionShowError = false;
 
-  TextEditingController _idController = TextEditingController();
-  TextEditingController _documentoController = TextEditingController();
-  TextEditingController _nombreController = TextEditingController();
-  TextEditingController _apellidoController = TextEditingController();
-  TextEditingController _sexoController = TextEditingController();
-  TextEditingController _fechaNacimientoController = TextEditingController();
-  TextEditingController _paisOrigenController = TextEditingController();
-  TextEditingController _fotoAutorController = TextEditingController();
+  TextEditingController _idAutorLibroController = TextEditingController();
+  TextEditingController _idLibroController = TextEditingController();
+  TextEditingController _idAutorController = TextEditingController();
+  TextEditingController _fechaPublicacionController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _id = widget.author.id;
-    _documento = widget.author.documento;
-    _nombre = widget.author.nombre;
-    _apellido = widget.author.apellido;
-    _sexo = widget.author.sexo;
-    _fechaNacimiento = widget.author.fechaNacimiento;
-    _paisOrigen = widget.author.paisOrigen;
-    _fotoAutor = widget.author.fotoAutor;
+    _idAutorLibro = widget.authorBook.id;
+    _idLibro = widget.authorBook.idLibro;
+    _idAutor = widget.authorBook.idAutor;
+    _fechaPublicacion = widget.authorBook.fechaPublicacion;
 
-    _idController.text = _id.toString();
-    _documentoController.text = _documento.toString();
-    _nombreController.text = _nombre;
-    _apellidoController.text = _apellido;
-    _sexoController.text = _sexo;
-    _fechaNacimientoController.text = _fechaNacimiento;
-    _paisOrigenController.text = _paisOrigen;
-    _fotoAutorController.text = _fotoAutor;
+    _idAutorLibroController.text = _idAutorLibro.toString();
+    _idLibroController.text = _idLibro.toString();
+    _idAutorController.text = _idAutor.toString();
+    _fechaPublicacionController.text = _fechaPublicacion;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text(widget.author.id == 0 ? 'Nuevo autor' : widget.author.nombre),
+        title: Text(widget.authorBook.id == 0
+            ? 'Nuevo autor-libro'
+            : widget.authorBook.fechaPublicacion),
       ),
       body: Stack(
         children: <Widget>[
           Column(
             children: <Widget>[
-              _showId(),
-              _showDocumento(),
-              _showNombre(),
-              _showApellido(),
-              _showSexo(),
-              _showFechaNacimiento(),
-              _showPaisOrigen(),
-              _showFotoAutor(),
-              _showButtons(),
+              _showIdAutorlibro(),
+              _showIdLibro(),
+              _showIdAutor(),
+              _showFechaPublicacion(),
+              _showButtons()
             ],
           ),
           _showLoader
@@ -113,153 +85,77 @@ class _AuthorScreenState extends State<AuthorScreen> {
     );
   }
 
-  Widget _showId() {
+  Widget _showIdAutorlibro() {
     return Container(
       padding: EdgeInsets.all(10),
       child: TextField(
-        controller: _idController,
+        controller: _idAutorLibroController,
         decoration: InputDecoration(
           hintText: 'Ingresa un identificador...',
-          labelText: 'Identificador',
-          errorText: _idShowError ? _idError : null,
+          labelText: 'Identificador autor-libro',
+          errorText: _idAutorLibroShowError ? _idAutorLibroError : null,
           suffixIcon: Icon(Icons.description),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
-          _id = int.parse(value);
+          _idAutorLibro = int.parse(value);
         },
       ),
     );
   }
 
-  Widget _showDocumento() {
+  Widget _showIdLibro() {
     return Container(
       padding: EdgeInsets.all(10),
       child: TextField(
-        controller: _documentoController,
+        controller: _idLibroController,
         decoration: InputDecoration(
-          hintText: 'Ingresa el documento...',
-          labelText: 'Documento',
-          errorText: _documentoShowError ? _documentoError : null,
+          hintText: 'Ingresa el identificador del libro...',
+          labelText: 'Identificador Libro',
+          errorText: _idLibroShowError ? _idLibroError : null,
           suffixIcon: Icon(Icons.description),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
-          _documento = int.parse(value);
+          _idLibro = int.parse(value);
         },
       ),
     );
   }
 
-  Widget _showNombre() {
+  Widget _showIdAutor() {
     return Container(
       padding: EdgeInsets.all(10),
       child: TextField(
-        controller: _nombreController,
+        controller: _idAutorController,
         decoration: InputDecoration(
-          hintText: 'Ingresa un nombre...',
-          labelText: 'Nombre',
-          errorText: _nombreShowError ? _nombreError : null,
+          hintText: 'Ingresa el identificador del autor...',
+          labelText: 'Identificador Autor',
+          errorText: _idAutorShowError ? _idAutorError : null,
           suffixIcon: Icon(Icons.description),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
-          _nombre = value;
+          _idAutor = int.parse(value);
         },
       ),
     );
   }
 
-  Widget _showApellido() {
+  Widget _showFechaPublicacion() {
     return Container(
       padding: EdgeInsets.all(10),
       child: TextField(
-        controller: _apellidoController,
+        controller: _fechaPublicacionController,
         decoration: InputDecoration(
-          hintText: 'Ingresa el apellido...',
-          labelText: 'Apellido',
-          errorText: _apellidoShowError ? _apellidoError : null,
+          hintText: 'Ingresa fecha de publicación...',
+          labelText: 'Fecha publicación',
+          errorText: _fechaPublicacionShowError ? _fechaPublicacionError : null,
           suffixIcon: Icon(Icons.description),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onChanged: (value) {
-          _apellido = value;
-        },
-      ),
-    );
-  }
-
-  Widget _showSexo() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: TextField(
-        controller: _sexoController,
-        decoration: InputDecoration(
-          hintText: 'Ingresa el sexo...',
-          labelText: 'Sexo',
-          errorText: _sexoShowError ? _sexoError : null,
-          suffixIcon: Icon(Icons.description),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-        onChanged: (value) {
-          _sexo = value;
-        },
-      ),
-    );
-  }
-
-  Widget _showFechaNacimiento() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: TextField(
-        controller: _fechaNacimientoController,
-        decoration: InputDecoration(
-          hintText: 'Ingresa la fecha de nacimiento...',
-          labelText: 'Fecha de nacimiento',
-          errorText: _fechaNacimientoShowError ? _fechaNacimientoError : null,
-          suffixIcon: Icon(Icons.description),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-        onChanged: (value) {
-          _fechaNacimiento = value;
-        },
-      ),
-    );
-  }
-
-  Widget _showPaisOrigen() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: TextField(
-        controller: _paisOrigenController,
-        decoration: InputDecoration(
-          hintText: 'Ingresa el país de origen...',
-          labelText: 'País de origen',
-          errorText: _paisOrigenShowError ? _paisOrigenError : null,
-          suffixIcon: Icon(Icons.description),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-        onChanged: (value) {
-          _paisOrigen = value;
-        },
-      ),
-    );
-  }
-
-  Widget _showFotoAutor() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: TextField(
-        controller: _fotoAutorController,
-        decoration: InputDecoration(
-          hintText: 'Ingresa la ruta de la foto...',
-          labelText: 'Ruta foto',
-          errorText: _fotoAutorShowError ? _fotoAutorError : null,
-          suffixIcon: Icon(Icons.description),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-        onChanged: (value) {
-          _fotoAutor = value;
+          _fechaPublicacion = value;
         },
       ),
     );
@@ -283,12 +179,12 @@ class _AuthorScreenState extends State<AuthorScreen> {
               onPressed: () => _save(),
             ),
           ),
-          widget.author.id == 0
+          widget.authorBook.id == 0
               ? Container()
               : SizedBox(
                   width: 20,
                 ),
-          widget.author.id == 0
+          widget.authorBook.id == 0
               ? Container()
               : Expanded(
                   child: ElevatedButton(
@@ -312,18 +208,18 @@ class _AuthorScreenState extends State<AuthorScreen> {
       return;
     }
 
-    widget.author.id == 0 ? _addRecord() : _saveRecord();
+    widget.authorBook.id == 0 ? _addRecord() : _saveRecord();
   }
 
   bool _validateFields() {
     bool isValid = true;
 
-    if (_nombre.isEmpty) {
+    if (_fechaPublicacion.isEmpty) {
       isValid = false;
-      _nombreShowError = true;
-      _nombreError = 'Debes ingresar un nombre.';
+      _fechaPublicacionShowError = true;
+      _fechaPublicacionError = 'Debes ingresar una fecha de publicación.';
     } else {
-      _nombreShowError = false;
+      _fechaPublicacionShowError = false;
     }
 
     setState(() {});
@@ -351,11 +247,13 @@ class _AuthorScreenState extends State<AuthorScreen> {
     }
 
     Map<String, dynamic> request = {
-      'description': _nombre,
+      'idLibro': _idLibro,
+      'idAutor': _idAutor,
+      'fechaPublicacion': _fechaPublicacion
     };
 
     Response response =
-        await ApiHelper.post('/api/autores/', request, widget.token);
+        await ApiHelper.post('/api/autoresLibros/', request, widget.token);
 
     setState(() {
       _showLoader = false;
@@ -396,12 +294,14 @@ class _AuthorScreenState extends State<AuthorScreen> {
     }
 
     Map<String, dynamic> request = {
-      'id': widget.author.id,
-      'nombre': _nombre,
+      'id': widget.authorBook.id,
+      'idLibro': _idLibro,
+      'idAutor': _idAutor,
+      'fechaPublicacion': _fechaPublicacion,
     };
 
-    Response response = await ApiHelper.put(
-        '/api/autores/', widget.author.id.toString(), request, widget.token);
+    Response response = await ApiHelper.put('/api/autoresLibros/',
+        widget.authorBook.id.toString(), request, widget.token);
 
     setState(() {
       _showLoader = false;
@@ -457,7 +357,7 @@ class _AuthorScreenState extends State<AuthorScreen> {
     }
 
     Response response = await ApiHelper.delete(
-        '/api/autores/', widget.author.id.toString(), widget.token);
+        '/api/autoresLibros/', widget.authorBook.id.toString(), widget.token);
 
     setState(() {
       _showLoader = false;

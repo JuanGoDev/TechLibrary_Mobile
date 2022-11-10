@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tech_library_mobile/models/token.dart';
+import 'package:tech_library_mobile/screens/authorBooks_screen.dart';
 import 'package:tech_library_mobile/screens/authors_screen.dart';
 import 'package:tech_library_mobile/screens/login_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -135,27 +136,31 @@ class _HomeScreenState extends State<HomeScreen> {
                           )));
             },
           ),
-          /*
           ListTile(
             leading: Icon(Icons.precision_manufacturing),
-            title: const Text('Procedimientos'),
+            title: const Text('AutorLibro'),
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ProceduresScreen(
+                      builder: (context) => AuthorBooksScreen(
                             token: widget.token,
                           )));
             },
-          ),*/
+          ),
           ListTile(
             leading: Icon(Icons.badge),
-            title: const Text('Tipo documento'),
+            title: const Text('Ejemplares'),
             onTap: () {},
           ),
           ListTile(
             leading: Icon(Icons.toys),
-            title: const Text('Tipo vehicle'),
+            title: const Text('Libros'),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: Icon(Icons.toys),
+            title: const Text('Usuarios Ejemplares'),
             onTap: () {},
           ),
           Divider(
