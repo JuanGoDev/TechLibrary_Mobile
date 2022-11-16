@@ -151,6 +151,7 @@ class _AuthorBooksScreenState extends State<AuthorBooksScreen> {
     );
   }
 
+//Permite filtrar la lista de items existentes
   void _showFilter() {
     showDialog(
         context: context,
