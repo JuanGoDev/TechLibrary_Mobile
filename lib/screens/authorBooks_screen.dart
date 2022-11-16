@@ -115,6 +115,7 @@ class _AuthorBooksScreenState extends State<AuthorBooksScreen> {
     );
   }
 
+//Permite obtener una lista de items
   Widget _getListView() {
     return RefreshIndicator(
       onRefresh: _getAuthorBooks,
@@ -150,6 +151,7 @@ class _AuthorBooksScreenState extends State<AuthorBooksScreen> {
     );
   }
 
+//Permite filtrar la lista de items existentes
   void _showFilter() {
     showDialog(
         context: context,
