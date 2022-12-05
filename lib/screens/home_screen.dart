@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tech_library_mobile/models/token.dart';
 import 'package:tech_library_mobile/screens/authorBooks_screen.dart';
 import 'package:tech_library_mobile/screens/authors_screen.dart';
+import 'package:tech_library_mobile/screens/exemplarys_screen.dart';
 import 'package:tech_library_mobile/screens/login_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
@@ -151,7 +152,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ListTile(
             leading: Icon(Icons.badge),
             title: const Text('Ejemplares'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ExemplarysScreen(
+                      token: widget.token,
+                    ),
+                  ));
+            },
           ),
           ListTile(
             leading: Icon(Icons.toys),
@@ -180,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _sendMessage() async {
     final link = WhatsAppUnilink(
       phoneNumber: '+573134682688',
-      text: 'Hola soy ${widget.token} cliente del taller',
+      text: 'Hola soy ${widget.token} cliente de la Biblioteca',
     );
     await launch('$link');
   }
