@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tech_library_mobile/models/token.dart';
 import 'package:tech_library_mobile/screens/authorBooks_screen.dart';
 import 'package:tech_library_mobile/screens/authors_screen.dart';
+import 'package:tech_library_mobile/screens/books_screen.dart';
 import 'package:tech_library_mobile/screens/exemplarys_screen.dart';
 import 'package:tech_library_mobile/screens/login_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -138,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.precision_manufacturing),
+            leading: Icon(Icons.library_books),
             title: const Text('AutorLibro'),
             onTap: () {
               Navigator.push(
@@ -163,9 +164,16 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.toys),
+            leading: Icon(Icons.book),
             title: const Text('Libros'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => BooksScreen(
+                            token: widget.token,
+                          )));
+            },
           ),
           ListTile(
             leading: Icon(Icons.toys),
