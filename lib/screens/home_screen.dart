@@ -6,6 +6,7 @@ import 'package:tech_library_mobile/models/token.dart';
 import 'package:tech_library_mobile/screens/authorBooks_screen.dart';
 import 'package:tech_library_mobile/screens/authors_screen.dart';
 import 'package:tech_library_mobile/screens/books_screen.dart';
+import 'package:tech_library_mobile/screens/exemplaryUsers_screen.dart';
 import 'package:tech_library_mobile/screens/exemplarys_screen.dart';
 import 'package:tech_library_mobile/screens/login_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -178,7 +179,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ListTile(
             leading: Icon(Icons.toys),
             title: const Text('Usuarios Ejemplares'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ExemplaryUsersScreen(
+                      token: widget.token,
+                    ),
+                  ));
+            },
           ),
           Divider(
             color: Colors.black,
