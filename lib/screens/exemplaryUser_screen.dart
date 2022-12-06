@@ -368,7 +368,7 @@ class _ExemplaryUserScreen extends State<ExemplaryUserScreen> {
     setState(() {
       _showLoader = true;
     });
-
+    //Coemtario de prueba
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       setState(() {
