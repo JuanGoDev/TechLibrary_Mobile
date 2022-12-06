@@ -1,11 +1,12 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'dart:convert';
-
 import 'package:tech_library_mobile/helpers/constans.dart';
 import 'package:tech_library_mobile/models/author.dart';
 import 'package:tech_library_mobile/models/authorBook.dart';
 import 'package:tech_library_mobile/models/book.dart';
+import 'package:tech_library_mobile/models/exemplary.dart';
+import 'package:tech_library_mobile/models/exemplaryUser.dart';
 import 'package:tech_library_mobile/models/response.dart';
 import 'package:tech_library_mobile/models/token.dart';
 import 'package:http/http.dart' as http;
@@ -163,8 +164,10 @@ class ApiHelper {
     return Response(isSuccess: true, result: list);
   }
 
+
   static Future<Response> getBooks(Token token) async {
-    if (!_validToken(token)) {
+  
+      if (!_validToken(token)) {
       return Response(
           isSuccess: false,
           message:
@@ -191,6 +194,73 @@ class ApiHelper {
     if (decodedJson != null) {
       for (var item in decodedJson) {
         list.add(Book.fromJson(item));
+      }
+    }
+    return Response(isSuccess: true, result: list);  
+  }
+
+  static Future<Response> getExemplarys(Token token) async {
+    if (!_validToken(token)) {
+      return Response(
+          isSuccess: false,
+          message:
+              'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
+    }
+    
+    var url = Uri.parse('${Constans.apiUrl}/api/ejemplares');
+    var response = await http.get(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+        'authorization': 'bearer ${token.token}',
+      },
+    );
+   
+    var body = response.body;
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }  
+
+    List<Exemplary> list = [];
+    var decodedJson = jsonDecode(body);
+    if (decodedJson != null) {
+      for (var item in decodedJson) {
+        list.add(Exemplary.fromJson(item));
+      }
+    }
+
+    return Response(isSuccess: true, result: list);
+  }
+
+  static Future<Response> getExemplaryUser(Token token) async {
+    if (!_validToken(token)) {
+      return Response(
+          isSuccess: false,
+          message:
+              'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
+    }
+
+    var url = Uri.parse('${Constans.apiUrl}/api/usuariosEjemplares');
+    var response = await http.get(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+        'authorization': 'bearer ${token.token}',
+      },
+    );
+
+    var body = response.body;
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    List<ExemplaryUser> list = [];
+    var decodedJson = jsonDecode(body);
+    if (decodedJson != null) {
+      for (var item in decodedJson) {
+        list.add(ExemplaryUser.fromJson(item));
       }
     }
 
