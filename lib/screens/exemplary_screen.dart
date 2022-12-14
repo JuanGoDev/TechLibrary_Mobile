@@ -270,7 +270,7 @@ class _ExemplaryScreenState extends State<ExemplaryScreen> {
 
     Map<String, dynamic> request = {
       'id': widget.exemplary.id,
-      'idLibro': widget.exemplary.idLibro,
+      'idLibro': _idLibro,
       'localizacion': _Localizacion,
     };
 
