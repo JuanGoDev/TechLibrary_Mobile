@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:tech_library_mobile/components/loader_component.dart';
@@ -221,6 +223,7 @@ class _ExemplaryScreenState extends State<ExemplaryScreen> {
     }
 
     Map<String, dynamic> request = {
+      'idLibro': _idLibro,
       'localizacion': _Localizacion,
     };
 

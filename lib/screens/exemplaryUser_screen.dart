@@ -275,6 +275,8 @@ class _ExemplaryUserScreen extends State<ExemplaryUserScreen> {
     }
 
     Map<String, dynamic> request = {
+      'idUsuario': _idUsuario,
+      'idEjemplar': _idEjemplar,
       'fechaPrestamo': _fechaPrestamo,
       'fechaDevolucion': _fechaDevolucion,
     };
